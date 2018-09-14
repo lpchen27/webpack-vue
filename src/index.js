@@ -4,14 +4,13 @@ import App from './app.vue'
 const root = document.createElement('div');
 document.body.appendChild(root);
 
-import './assets/timg.jpg'
-import './styles/index.less'
+import './styles/global.less'
 
 new Vue({
 	render: function(h){
 		return h(App);
 	}
-}).$amount(root)
+}).$mount(root)
 
 /*new Vue({
 	el : "#app",
