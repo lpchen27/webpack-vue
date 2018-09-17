@@ -3,13 +3,14 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');  //自动加载js
 const webpack = require('webpack');
 //const ExtractPlugin = require('extract-text-webpack-plugin');    //分离css文件 webpack4不再使用
-const ExtractCSSPlugin = require('mini-css-extract-plugin');
+const ExtractCSSPlugin = require('mini-css-extract-plugin');   //分离css文件
+const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')  //压缩css文件
 
 const isDev = process.env.NODE_ENV === 'development';
 
 let config = {
 	context : path.resolve(__dirname,'../'),
-	mode : "development",
+	mode : isDev?"development":"production",
 	entry : './src/index.js',
 	output : {
 		filename : 'bundle.[hash:8].js',
@@ -95,6 +96,9 @@ if(isDev){
 	});
 	config.plugins.push(new webpack.HotModuleReplacementPlugin()); //热加载只在dev使用  且和 chunkhash不能同时使用
 }else{
+	config.entry = {
+		app:path.join(__dirname,'../src/index.js')
+	};
 	config.output.filename = '[name].[chunkhash:8].js';
 	config.module.rules.push({
 		test : /\.css$/,
@@ -144,7 +148,16 @@ if(isDev){
 		new ExtractCSSPlugin({
 			filename:'[name].[hash:8].css',
 			chunkFilename:'[id].css'
-		})
+		}),
+		new OptimizeCSSPlugin()
+		/*new webpack.optimize.SplitChunksPlugin({
+			chunks: "initial",
+			minSize: 20000,
+			minChunks: 1,
+			maxAsyncRequests: 5,
+			maxInitialRequests: 3,
+			name: true
+		})*/
 	)
 
 
