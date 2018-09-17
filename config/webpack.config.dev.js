@@ -46,7 +46,7 @@ let config = {
 		}),
 		new VueLoaderPlugin(),
 		new HtmlWebpackPlugin(),
-		new webpack.HotModuleReplacementPlugin(),
+		
 		new webpack.NoEmitOnErrorsPlugin()
 	]
 }
@@ -93,8 +93,9 @@ if(isDev){
 			'stylus-loader'
 		]
 	});
+	config.plugins.push(new webpack.HotModuleReplacementPlugin()); //热加载只在dev使用  且和 chunkhash不能同时使用
 }else{
-	config.output.filename = '[name].[hash:8].js';
+	config.output.filename = '[name].[chunkhash:8].js';
 	config.module.rules.push({
 		test : /\.css$/,
 		use: [
